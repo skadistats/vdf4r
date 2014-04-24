@@ -1,0 +1,80 @@
+module VDF4R
+  grammar KeyValues
+    rule line
+      (enter_object / exit_object / comment / key_value / key / blank) endline?
+      {
+        def value
+          elements[0].value
+        end
+      }
+    end
+
+    rule blank
+      whitespace*
+      {
+        def value
+          :blank
+        end
+      }
+    end
+
+    rule key_value
+      whitespace* token whitespace* token whitespace* comment?
+      {
+        def value
+          [elements[1].value, elements[3].value]
+        end
+      }
+    end
+
+    rule key
+      whitespace* token whitespace* comment?
+      {
+        def value
+          [elements[1].value]
+        end
+      }
+    end
+
+    rule token
+      '"' [^"]* '"'
+      {
+        def value
+          elements[1..-2].collect { |e| e.text_value }.join
+        end
+      }
+    end
+
+    rule enter_object
+      whitespace* '{' whitespace* comment? {
+        def value
+          :enter_object
+        end
+      }
+    end
+
+    rule exit_object
+      whitespace* '}' whitespace* comment? {
+        def value
+          :exit_object
+        end
+      }
+    end
+
+    rule comment
+      whitespace* [/]? [/] [^\n]* {
+        def value
+          :comment
+        end
+      }
+    end
+
+    rule whitespace
+      [\t ]
+    end
+
+    rule endline
+      [\r]? [\n]
+    end
+  end
+end

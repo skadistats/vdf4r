@@ -1,0 +1,4 @@
+"DOTAAbilities"
+{
+  The parser won't understand this line.
+}

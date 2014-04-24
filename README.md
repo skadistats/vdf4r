@@ -19,7 +19,7 @@ As normal:
 
 Or in your Gemfile:
 
-    gem 'vdf4r', '~>0.1.0'
+    gem 'vdf4r', '~>0.1.1'
 
 
 ## Usage
@@ -62,5 +62,5 @@ change is on a topic branch accompanied by new tests; all behaviors must pass.
 
 ## License
 
-VDF4R is offered under the MIT license. See [LICENSE](https://github.com/skadistats/vdf4r/blob/master/README.md)
+VDF4R is offered under the MIT license. See [LICENSE](https://github.com/skadistats/vdf4r/blob/master/LICENSE)
 for the license itself.

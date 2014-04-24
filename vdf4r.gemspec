@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.date        = %q{2014-04-24}
   s.licenses    = ['MIT']
   s.summary     = "Valve Data Format (VDF) file parser"
-  s.description = File.read(File.join(pwd, 'README.md'))
+  s.description = "See README at https://github.com/skadistats/vdf4r"
 
   s.authors  = ['Joshua Morris']
   s.email    = 'onethirtyfive@skadistats.com'

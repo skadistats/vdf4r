@@ -7,6 +7,25 @@ module VDF4R
   describe Parser do
     subject { VDF4R::Parser }
 
+    describe 'class methods' do
+      context 'input safety' do
+        let(:dirty) { '"foo\"\"bar\""' }
+        let(:clean) { '"foo&{QUOTE}&{QUOTE}bar&{QUOTE}"' }
+
+        describe '#clean' do
+          it 'replaces escaped quotes with token' do
+            expect(subject.clean(dirty)).to eq(clean)
+          end
+        end
+
+        describe '#dirty' do
+          it 'replaces tokens with escaped quote' do
+            expect(subject.dirty(clean)).to eq(dirty)
+          end
+        end
+      end
+    end
+
     describe 'instantiation' do
       shared_examples_for "doesn't raise" do
         it 'does not raise' do
@@ -50,7 +69,7 @@ module VDF4R
       end
     end
 
-    describe 'items.txt fixture translation output' do
+    describe 'usage example (items.txt)' do
       let(:result) do
         with_fixture('items') do |fixture|
           subject.new(fixture).parse

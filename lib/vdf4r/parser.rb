@@ -8,6 +8,16 @@ Treetop.load GRAMMAR_PATH
 
 module VDF4R
   class Parser
+    class << self
+      def clean(input)
+        input.gsub(/\\"/, '&{QUOTE}')
+      end
+
+      def dirty(input)
+        input.gsub('&{QUOTE}', '\"')
+      end
+    end
+
     def initialize(input)
       case
       when input.respond_to?(:each_line)
@@ -26,30 +36,29 @@ module VDF4R
       path   = []
 
       @input.each do |line|
-        node = parser.parse(line)
+        node = parser.parse(Parser.clean(line))
         raise "ungrammatical content: '#{line}'" if node.nil?
 
-        next if [:blank, :comment].include?(node.value)
+        _, (encounter, context) = node.value
 
-        if node.value.respond_to?(:to_ary)
-          case node.value.length
-          when 1
-            key = node.value.first
-          when 2
-            k, v = node.value
-            store.traverse(path)[k] = v
-          end
-        elsif node.value.kind_of?(Symbol)
-          case node.value
-          when :enter_object
-            raise 'no preceding key for object' unless key
-            raise 'too recursive' if path.length > MAX_RECURSION
-            path.push key
-            key = nil
-          when :exit_object
-            raise 'nesting unbalanced (excessive exit)' if path.empty?
-            path.pop
-          end
+        case encounter
+        when :blank, :comment
+          # do nothing
+        when :enter_object
+          raise 'no preceding key for object' unless key
+          raise 'too recursive' if path.length > MAX_RECURSION
+          path.push key
+          key = nil
+        when :exit_object
+          raise 'nesting unbalanced (excessive exit)' if path.empty?
+          path.pop
+        when :key
+          key = context[0]
+        when :key_value
+          k, v = context
+          store.traverse(path)[k] = Parser.dirty(v)
+        else
+          raise 'unknown node value'
         end
       end
 

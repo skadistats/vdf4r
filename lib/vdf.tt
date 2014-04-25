@@ -4,16 +4,33 @@ module VDF4R
       (enter_object / exit_object / comment / key_value / key / blank) endline?
       {
         def value
-          elements[0].value
+          [:line, elements[0].value]
         end
       }
     end
 
-    rule blank
-      whitespace*
+    rule enter_object
+      whitespace* '{' whitespace* comment?
       {
         def value
-          :blank
+          [:enter_object, nil]
+        end
+      }
+    end
+
+    rule exit_object
+      whitespace* '}' whitespace* comment?
+      {
+        def value
+          [:exit_object, nil]
+        end
+      }
+    end
+
+    rule comment
+      whitespace* '//' [^\n]* {
+        def value
+          [:comment, nil]
         end
       }
     end
@@ -22,7 +39,7 @@ module VDF4R
       whitespace* token whitespace* token whitespace* comment?
       {
         def value
-          [elements[1].value, elements[3].value]
+          [:key_value, [elements[1].value, elements[3].value]]
         end
       }
     end
@@ -31,50 +48,50 @@ module VDF4R
       whitespace* token whitespace* comment?
       {
         def value
-          [elements[1].value]
+          [:key, [elements[1].value]]
+        end
+      }
+    end
+
+    rule blank
+      whitespace*
+      {
+        def value
+          [:blank, nil]
         end
       }
     end
 
     rule token
-      '"' [^"]* '"'
+      token_delimiter [^"]* token_delimiter
       {
         def value
-          elements[1..-2].collect { |e| e.text_value }.join
+          elements[1...-1].collect { |e| e.text_value }.join
         end
       }
     end
 
-    rule enter_object
-      whitespace* '{' whitespace* comment? {
+    rule token_delimiter
+      '"'
+      {
         def value
-          :enter_object
-        end
-      }
-    end
-
-    rule exit_object
-      whitespace* '}' whitespace* comment? {
-        def value
-          :exit_object
-        end
-      }
-    end
-
-    rule comment
-      whitespace* [/]? [/] [^\n]* {
-        def value
-          :comment
+          ''
         end
       }
     end
 
     rule whitespace
       [\t ]
+      {
+        [:whitespace, nil]
+      }
     end
 
     rule endline
       [\r]? [\n]
+      {
+        [:endline, nil]
+      }
     end
   end
 end

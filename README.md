@@ -19,7 +19,7 @@ As normal:
 
 Or in your Gemfile:
 
-    gem 'vdf4r', '~>0.1.1'
+    gem 'vdf4r'
 
 
 ## Usage

@@ -51,7 +51,18 @@ parsing, you will need to fix the error. It will give you the offending line:
 Indeed, in the VDF file, there are "comment" lines lacking the proper '//'
 prefix. When I changed the file to contain '// Damage.' it parsed correctly.
 
-I'll think of a way to make the parser more permissive as time allows.
+Another thing you'll see, specifically in `dota_english.txt` is the placement
+of two key/value pairs on one line. This will have to be fixed manually, since
+it's an outright error:
+
+    "DOTA_Tooltip_ability_item_mjollnir_static_duration"          "STATIC DURATION:"    "DOTA_Tooltip_ability_item_mjollnir_static_damage"            "STATIC DAMAGE:"
+
+This can be fixed like so if you encounter similar errors:
+
+    "DOTA_Tooltip_ability_item_mjollnir_static_duration"          "STATIC DURATION:"
+    "DOTA_Tooltip_ability_item_mjollnir_static_damage"            "STATIC DAMAGE:"
+
+I'll try to make the parser more permissive as time allows.
 
 
 ## Hacking

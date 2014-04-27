@@ -1,0 +1,4 @@
+"DOTAAbilities"
+{
+"Version" "First part of the value
+}

@@ -7,7 +7,7 @@ require File.join(pwd, 'lib', 'vdf4r', 'version.rb')
 Gem::Specification.new do |s|
   s.name        = 'vdf4r'
   s.version     = VDF4R::VERSION
-  s.date        = %q{2014-04-24}
+  s.date        = %q{2014-04-27}
   s.licenses    = ['MIT']
   s.summary     = "Valve Data Format (VDF) file parser"
   s.description = "See README at https://github.com/skadistats/vdf4r"

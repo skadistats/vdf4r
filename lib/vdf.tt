@@ -1,7 +1,10 @@
 module VDF4R
   grammar KeyValues
     rule line
-      (enter_object / exit_object / comment / key_value / key / blank) endline?
+      (enter_object / exit_object /
+      comment /
+      key_enter_value / key_continue_value / key_exit_value / key_value / key /
+      blank) endline?
       {
         def value
           [:line, elements[0].value]
@@ -53,6 +56,48 @@ module VDF4R
       }
     end
 
+    rule key_enter_value
+      whitespace* token whitespace* token_delimiter token_content+ &endline
+      {
+        def value
+          key           = elements[1].value
+          partial_value = elements[4...-1].collect { |e| e.text_value }.join
+
+          [:key_enter_value, [elements[1].value, partial_value]]
+        end
+      }
+    end
+
+    rule key_continue_value
+      token_content+ &endline
+      {
+        def value
+          partial_value = elements[1...-1].collect { |e| e.text_value }.join
+
+          [:key_enter_value, [partial_value]]
+        end
+      }
+    end
+
+    rule key_exit_value
+      token_content* token_delimiter whitespace* &endline
+      {
+        def value
+          partial_value = elements[1...-3].collect { |e| e.text_value }.join
+
+          [:key_enter_value, [partial_value]]
+        end
+      }
+    end
+
+    rule continue_value
+      [^"]+
+    end
+
+    rule exit_value
+      [^"]+ delimiter_token
+    end
+
     rule blank
       whitespace*
       {
@@ -63,19 +108,23 @@ module VDF4R
     end
 
     rule token
-      token_delimiter [^"]* token_delimiter
+      token_delimiter token_content* token_delimiter
       {
         def value
-          elements[1...-1].collect { |e| e.text_value }.join
+          elements[1..-2].collect { |e| e.text_value }.join
         end
       }
     end
 
     rule token_delimiter
       '"'
+    end
+
+    rule token_content
+      [^"\r\n{}]
       {
         def value
-          ''
+          elements[0].text_value
         end
       }
     end

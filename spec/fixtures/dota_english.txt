@@ -1,0 +1,24 @@
+"lang" 
+{ 
+  "Language" "English" 
+  "Tokens" 
+  {
+    "DOTA_ItemOnSale"   "SALE!"
+    
+    "DOTA_AttackMove"   "Attack Move"
+    "DOTA_RespawnTime"    "Respawning in %s1 seconds"
+    //top bar
+
+    "DOTA_Chat_QuintupleKill"   "%s1 IS ON A RAMPAGE!!"
+    // The Archronicus - Title Page
+    
+    "DOTA_Archronicus_MadMoon_Page4" "The fallen shards of primal matter had fractured into their original composites: Radiant and Dire. In its pure form, each type of stone gave off a peculiar energy. For those who settled around the sites, they found themselves feeding on this unearthly power until they had not only harnessed the energy but made themselves dependent on it. They built shrines around the Ancients and revered them, ironically, as godlike entities that had fallen to earth.
+The Ancients, both Radiant and Dire, provided many benefits: kinetic energy, mana, protection, even resurrection. But the emanations changed everything in their influence. Around the Radiant, the effects were bright and colorful, evoking lightness and charm. Around the Dire, a sinister radioactive glow, a visual seepage indicative of poison and decay. Neither force was neutral; they were both perfect complements and total contradictions that could never be at peace.
+As each stone's cultural influence spread, it eventually came in conflict with the societies of its rival. Interference between the Ancients was cause for war, as the presence of one caused a corresponding fall-off in the energy of the other. Each stone could only be restored to full power with the destruction of its Foe-stone. And so the enthralled creatures rallied to protect their land by destroying the neighboring Ancient, and from far and wide the Heroes heard the call to battle and came to join, hardly realizing that in some sense both sides were the same."
+
+    "npc_dota_hero_rattletrap_bio"                          "Rattletrap descends from the same far-flung kindred as Sniper and Tinker, and like many of the Keen Folk, has offset his diminutive stature through the application of gadgetry and wit.  The son of the son of a clockmaker, Rattletrap was many years apprenticed to that trade before war rode down from the mountains and swept the plains villages free of such innocent vocations.  “Your new trade is battle,” his dying father told him as the village of their ancestors lay in charred and smoking ruins.    
+It is a poor tradesman who blames his tools, and Rattletrap was never one to make excuses.  After burying his father among the ruins of their village, he set about to transform himself into the greatest tool of warfare that any world had ever seen. He vowed to never again be caught unprepared, instead using his talents to assemble a suit of powered Clockwerk armor to make the knights of other lands look like tin cans by comparison.  Now Rattletrap is alive with devices, a small but deadly warrior whose skills at ambush and destruction have risen to near-automated levels of efficiency.  An artisan of death, his mechanizations make short work of the unwary, heralding a new dawn in this age of warfare.  What time is it? It's Clockwerk time!
+"
+    
+  }
+}

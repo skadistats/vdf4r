@@ -10,7 +10,7 @@ module VDF4R
     describe 'class methods' do
       context 'input safety' do
         let(:dirty) { '"foo\"\"bar\""' }
-        let(:clean) { '"foo&{QUOTE}&{QUOTE}bar&{QUOTE}"' }
+        let(:clean) { '"foo&quot;&quot;bar&quot;"' }
 
         describe '#clean' do
           it 'replaces escaped quotes with token' do
@@ -94,54 +94,54 @@ module VDF4R
       end
     end
 
-    describe 'bad input' do
-      context 'unbalanced nesting (insufficient exit)' do
-        it 'raises TranslationError' do
-          expect {
-            with_fixture('bad/insufficient_exit') do |fixture|
-              subject.new(fixture).parse
-            end
-          }.to raise_error /insufficient exit/
+    describe 'usage example (dota_english.txt)' do
+      let(:result) do
+        with_fixture('dota_english') do |fixture|
+          subject.new(fixture).parse
         end
       end
 
-      context 'unbalanced nesting (excessive exit)' do
-        it 'raises TranslationError' do
-          expect {
-            with_fixture('bad/excessive_exit') do |fixture|
-              subject.new(fixture).parse
-            end
-          }.to raise_error /excessive exit/
+      it "doesn't raise" do
+        expect {
+          result
+        }.not_to raise_error
+      end
+    end
+
+    describe 'bad input' do
+      def parse_fixture(fixture_name)
+        with_fixture(fixture_name) do |fixture|
+          subject.new(fixture).parse
         end
+      end
+
+      it 'raises on unbalanced nesting (insufficient exit)' do
+        expect { parse_fixture('bad/insufficient_exit') }.to raise_error /insufficient exit/
+      end
+
+      it 'raises on unbalanced nesting (excessive exit)' do
+        expect { parse_fixture('bad/excessive_exit') }.to raise_error /excessive exit/
       end
  
-      context 'ungrammatical content' do
-        it 'raises TranslationError' do
-          expect {
-            with_fixture('bad/ungrammatical_content') do |fixture|
-              subject.new(fixture).parse
-            end
-          }.to raise_error /ungrammatical content/
-        end
+      it 'raises on ungrammatical content' do
+        expect { parse_fixture('bad/ungrammatical_content') }.to raise_error /ungrammatical content/
       end
 
-      context 'too recursive' do
-        it 'raises TranslationError' do
-          expect {
-            with_fixture('bad/too_recursive') do |fixture|
-              subject.new(fixture).parse
-            end
-          }.to raise_error /too recursive/
-        end
+      it 'raises when too recursive' do
+        expect { parse_fixture('bad/too_recursive') }.to raise_error /too recursive/
       end
 
-      context 'no preceding key' do
-        it 'raises TranslationError' do
-          expect {
-            with_fixture('bad/no_preceding_key') do |fixture|
-              subject.new(fixture).parse
-            end
-          }.to raise_error /no preceding key/
+      it 'raises on no preceding key' do
+        expect { parse_fixture('bad/no_preceding_key') }.to raise_error /no preceding key/
+      end
+
+      describe 'multi-line values' do
+        it 'raises on enter' do
+          expect { parse_fixture('bad/multi_line_enter') }.to raise_error /enter/
+        end
+
+        it 'raises on exit' do
+          expect { parse_fixture('bad/multi_line_exit') }.to raise_error /exit/
         end
       end
     end

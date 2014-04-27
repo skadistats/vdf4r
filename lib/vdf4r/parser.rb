@@ -10,11 +10,11 @@ module VDF4R
   class Parser
     class << self
       def clean(input)
-        input.gsub(/\\"/, '&{QUOTE}')
+        input.gsub(/\\"/, '&quot;')
       end
 
       def dirty(input)
-        input.gsub('&{QUOTE}', '\"')
+        input.gsub('&quot;', '\"')
       end
     end
 
@@ -30,16 +30,24 @@ module VDF4R
     end
 
     def parse
-      parser = VDF4R::KeyValuesParser.new
-      store  = Store.new
-      key    = nil
-      path   = []
+      parser        = VDF4R::KeyValuesParser.new
+      store         = Store.new
+      key           = nil
+      partial_value = nil
+      path          = []
 
-      @input.each do |line|
+      @input.each_with_index do |line, index|
         node = parser.parse(Parser.clean(line))
-        raise "ungrammatical content: '#{line}'" if node.nil?
 
-        _, (encounter, context) = node.value
+        if node.nil?
+          raise "ungrammatical content at line #{index+1}: '#{line}'" if node.nil?
+        end
+
+        begin
+          _, (encounter, context) = node.value
+        rescue NoMethodError => e
+          
+        end
 
         case encounter
         when :blank, :comment
@@ -47,15 +55,26 @@ module VDF4R
         when :enter_object
           raise 'no preceding key for object' unless key
           raise 'too recursive' if path.length > MAX_RECURSION
+          raise 'enter during multi-line value' if partial_value
           path.push key
           key = nil
         when :exit_object
           raise 'nesting unbalanced (excessive exit)' if path.empty?
+          raise 'exit during multi-line value' if partial_value
           path.pop
-        when :key
-          key = context[0]
         when :key_value
           k, v = context
+          store.traverse(path)[k] = Parser.dirty(v)
+        when :key
+          key = context[0]
+        when :key_enter_value
+          key, partial_value = context
+        when :key_continue_value
+          # raise unless value is non-nil
+          partial_value += "\n#{context[0]}"
+        when :key_exit_value
+          v = partial_value + "\n#{context[0]}"
+          partial_value = nil
           store.traverse(path)[k] = Parser.dirty(v)
         else
           raise 'unknown node value'

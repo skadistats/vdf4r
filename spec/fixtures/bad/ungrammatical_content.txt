@@ -1,4 +1,4 @@
 "DOTAAbilities"
 {
-  The parser won't understand this line.
+  {The parser won't understand this line since it uses reserved characters.}
 }

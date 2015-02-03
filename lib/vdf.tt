@@ -121,7 +121,7 @@ module VDF4R
     end
 
     rule token_content
-      [^"\r\n{}]
+      [^"\r\n]
       {
         def value
           elements[0].text_value

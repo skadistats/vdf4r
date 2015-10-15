@@ -94,6 +94,25 @@ module VDF4R
       end
     end
 
+    describe 'selective parsing (items.txt)' do
+      let(:result) do
+        with_fixture('items') do |fixture|
+          subject.new(fixture).parse(keep_only='item_blades_of_attack')
+        end
+      end
+
+      it "does have item_blades_of_attack" do
+        abilities = result['DOTAAbilities']
+        expect(abilities).to include("item_blades_of_attack")
+      end
+
+      it "doesn't have item_blink" do
+        abilities = result['DOTAAbilities']
+        expect(abilities).not_to include("item_blink")
+      end
+
+    end
+
     describe 'usage example (dota_english.txt)' do
       let(:result) do
         with_fixture('dota_english') do |fixture|

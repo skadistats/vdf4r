@@ -29,7 +29,7 @@ module VDF4R
       end
     end
 
-    def parse
+    def parse(keep_only=nil)
       parser        = VDF4R::KeyValuesParser.new
       store         = Store.new
       key           = nil
@@ -64,7 +64,9 @@ module VDF4R
           path.pop
         when :key_value
           k, v = context
-          store.traverse(path)[k] = Parser.dirty(v)
+          if keep_only.nil? or (path.include? keep_only or k == keep_only)
+            store.traverse(path)[k] = Parser.dirty(v)
+          end
         when :key
           key = context[0]
         when :key_enter_value
@@ -75,7 +77,9 @@ module VDF4R
         when :key_exit_value
           v = partial_value + "\n#{context[0]}"
           partial_value = nil
-          store.traverse(path)[key] = Parser.dirty(v)
+          if keep_only.nil? or (path.include? keep_only or key == keep_only)
+            store.traverse(path)[key] = Parser.dirty(v)
+          end
         else
           raise 'unknown node value'
         end

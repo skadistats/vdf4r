@@ -97,7 +97,7 @@ module VDF4R
     describe 'selective parsing (items.txt)' do
       let(:result) do
         with_fixture('items') do |fixture|
-          subject.new(fixture).parse(keep_only='item_blades_of_attack')
+          subject.new(fixture).parse(keep_only=['item_blades_of_attack'])
         end
       end
 

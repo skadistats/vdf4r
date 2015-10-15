@@ -64,7 +64,17 @@ module VDF4R
           path.pop
         when :key_value
           k, v = context
-          if keep_only.nil? or (path.include? keep_only or k == keep_only)
+          if keep_only.nil?
+            store_value = true
+          else
+            store_value = false
+            keep_only.each do |keep_key|
+              if (path.include? keep_key or k == keep_key)
+                store_value = true
+              end
+            end
+          end
+          if store_value
             store.traverse(path)[k] = Parser.dirty(v)
           end
         when :key
@@ -77,7 +87,17 @@ module VDF4R
         when :key_exit_value
           v = partial_value + "\n#{context[0]}"
           partial_value = nil
-          if keep_only.nil? or (path.include? keep_only or key == keep_only)
+          if keep_only.nil?
+            store_value = true
+          else
+            store_value = false
+            keep_only.each do |keep_key|
+              if (path.include? keep_key or key == keep_key)
+                store_value = true
+              end
+            end
+          end
+          if store_value
             store.traverse(path)[key] = Parser.dirty(v)
           end
         else

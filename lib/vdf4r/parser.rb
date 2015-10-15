@@ -75,7 +75,7 @@ module VDF4R
         when :key_exit_value
           v = partial_value + "\n#{context[0]}"
           partial_value = nil
-          store.traverse(path)[k] = Parser.dirty(v)
+          store.traverse(path)[key] = Parser.dirty(v)
         else
           raise 'unknown node value'
         end

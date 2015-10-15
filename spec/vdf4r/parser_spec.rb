@@ -106,6 +106,18 @@ module VDF4R
           result
         }.not_to raise_error
       end
+
+      it 'parses multi-line values' do
+        tokens = result['lang']['Tokens']
+        expect(tokens).to include('DOTA_Archronicus_MadMoon_Page4')
+        expect(tokens).to include('npc_dota_hero_rattletrap_bio')
+
+        page_num_lines = tokens['DOTA_Archronicus_MadMoon_Page4'].count("\n") + 1
+        expect(page_num_lines).to eq(3)
+
+        bio_num_lines = tokens['npc_dota_hero_rattletrap_bio'].count("\n") + 1
+        expect(bio_num_lines).to eq(3)
+      end
     end
 
     describe 'bad input' do

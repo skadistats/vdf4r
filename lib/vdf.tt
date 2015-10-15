@@ -69,23 +69,23 @@ module VDF4R
     end
 
     rule key_continue_value
-      token_content+ &endline
+      whitespace* token_content+ whitespace* &endline
       {
         def value
           partial_value = elements[1...-1].collect { |e| e.text_value }.join
 
-          [:key_enter_value, [partial_value]]
+          [:key_continue_value, [partial_value]]
         end
       }
     end
 
     rule key_exit_value
-      token_content* token_delimiter whitespace* &endline
+      whitespace* token_content* token_delimiter whitespace* &endline
       {
         def value
           partial_value = elements[1...-3].collect { |e| e.text_value }.join
 
-          [:key_enter_value, [partial_value]]
+          [:key_exit_value, [partial_value]]
         end
       }
     end
